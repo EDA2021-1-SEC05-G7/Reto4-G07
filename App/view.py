@@ -33,24 +33,75 @@ Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
-
 def printMenu():
+    print("*******************************************")
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- ")
+    print("3- ")
+    print("4- ")
+    print("5- ")
+    print("6- ")
+    print("7- ")
+    print("0- Salir")
+    print("*******************************************")
 
 catalog = None
 
 """
 Menu principal
 """
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
+    
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        cata = controller.ini()
+        controller.loadData(cata)
+        numvertex = controller.totalVertex(cata)
+        numedges = controller.totalEdges(cata)
+        print('Numero de vertices: ' + str(numvertex))
+        print('Numero de arcos: ' + str(numedges))
 
+
+    
     elif int(inputs[0]) == 2:
+        #Requerimiento1
+        pass
+
+    
+    elif int(inputs[0]) == 3:
+        #Requerimiento2
+        pass
+    
+    
+    elif int(inputs[0]) == 4:
+        #Requerimiento3
+        pass
+
+
+    elif int(inputs[0]) == 5:
+        #Requerimiento4
+        pass
+
+    
+    elif int(inputs[0]) == 6:
+        #Requerimiento5
+        pass
+
+    elif int(inputs[0]) == 7:
+        #Requerimiento6Bono
+        pass
+
+
+    elif int(inputs[0]) == 8:
+        #Requerimiento7Bono
+        pass
+
+    elif int(inputs[0]) == 9:
+        #Requerimiento8Bono
         pass
 
     else:
