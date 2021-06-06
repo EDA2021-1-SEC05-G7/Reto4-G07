@@ -136,7 +136,7 @@ while True:
         ans = controller.req5(catalog, landingpoint)
 
         print("Paises afectados:", pq.size(ans))
-        print("\n Lista de paises afectados:")
+        print("\nLista de paises afectados:")
 
         while not pq.isEmpty(ans):
             val = pq.delMin(ans)
@@ -146,4 +146,5 @@ while True:
 
     else:
         sys.exit(0)
+
 sys.exit(0)
