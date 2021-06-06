@@ -25,6 +25,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+from DISClib.ADT import map as mp
 
 
 """
@@ -58,12 +59,14 @@ while True:
     
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
-        cata = controller.ini()
-        controller.loadData(cata)
-        numvertex = controller.totalVertex(cata)
-        numedges = controller.totalEdges(cata)
-        print('Numero de vertices: ' + str(numvertex))
-        print('Numero de arcos: ' + str(numedges))
+        catalog = controller.ini()
+        controller.loadData(catalog)
+        numvertex = controller.totalVertex(catalog)
+        numedges = controller.totalEdges(catalog)
+        countries = mp.size(catalog["Countries"])
+        print('Numero de Landing Pointa: ' + str(numvertex))
+        print('Numero de conexiones entre Landing points: ' + str(numedges))
+        print("Total de paises:", countries)
 
 
     

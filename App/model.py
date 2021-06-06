@@ -218,3 +218,13 @@ def formatLength(length):
         length = float(length[0].replace(",", ""))
     
     return length
+
+
+def primerlandingpoint(catalog):
+    i = 0
+    for j in me.setKey(catalog["LandingPoints"]):
+        while i < 1:
+            pareja = mp.get(catalog["LandingPoints"], j)
+            value = me.getValue(pareja)
+            
+        i += 1
