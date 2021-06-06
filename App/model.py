@@ -67,32 +67,17 @@ def newCatalog():
 # Funciones para agregar informacion al catalogo
 
 def addConnection(catalog, connection):
-    
+
     origin = int(connection['\ufefforigin'])
     destination = int(connection['destination'])
-    lenght = formatLength(connection['cable_length'])
-      
+    length = formatLength(connection['cable_length'])
+
     addNode(catalog, origin)
     addNode(catalog, destination)
-    addEdge(catalog, origin, destination, lenght)
+    addEdge(catalog, origin, destination, length)
     addPath(catalog, origin, destination, connection)
-    
-    return catalog
-
-
-def addCountries(catalog, country):
-
-    addCountry(catalog, country)
-    return catalog
-
-
-
-def addLandingPoints(catalog, landingpoint):
-
-    addLandingPoint(catalog, landingpoint)
 
     return catalog
-
 
 
 # Funciones para creacion de datos
@@ -119,18 +104,18 @@ def addEdge(catalog, origin, destination, length):
 
 
 def addPath(catalog, origin, destination, connection):
-    
+
     path = str(origin)+"-"+str(destination)
 
     entry = mp.get(catalog["Paths"], path)
 
     if entry is None:
         novaEntry = {"origin": origin,
-                     "destination": destination, 
-                     "cableName": connection["cable_name"], 
+                     "destination": destination,
+                     "cableName": connection["cable_name"],
                      "cableId": connection["cable_id"],
                      "cableLength": connection["cable_length"],
-                     "owners": connection["owners"], 
+                     "owners": connection["owners"],
                      "capacity": float(connection["capacityTBPS"])}
         mp.put(catalog["Paths"], path, novaEntry)
 
@@ -145,20 +130,20 @@ def addCountry(catalog, country):
 
     if initus is None:
         novusinit = {"name": country["CountryName"],
-                     "capital": country["CapitalName"], 
-                     "code": country["CountryCode"], 
+                     "capital": country["CapitalName"],
+                     "code": country["CountryCode"],
                      "latitude": country["CapitalLatitude"],
                      "longitude": country["CapitalLongitude"],
-                     "continent": country["ContinentName"], 
+                     "continent": country["ContinentName"],
                      "population": int(country["Population"].replace(".", "")),
                      "users": int(country["Internet users"].replace(".", ""))}
-        
+
         mp.put(catalog["Countries"], nomen, initus)
     return catalog
 
 
 def addLandingPoint(catalog, landingpoint):
-    
+
     lanid = int(landingpoint['landing_point_id'])
 
     inita = mp.get(catalog['LandingPoints'], lanid)
@@ -216,7 +201,7 @@ def formatLength(length):
     else:
         length = length.split(" ")
         length = float(length[0].replace(",", ""))
-    
+
     return length
 
 
@@ -226,5 +211,5 @@ def primerlandingpoint(catalog):
         while i < 1:
             pareja = mp.get(catalog["LandingPoints"], j)
             value = me.getValue(pareja)
-            
+
         i += 1

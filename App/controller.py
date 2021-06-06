@@ -40,16 +40,16 @@ def ini():
 
 def loadData(catalog):
     loadConnections(catalog)
-    loadCountries(catalog)
-    loadLandingPoints(catalog)
+    lastcountry = loadCountries(catalog)
+    firstlandingpoint = loadLandingPoints(catalog)
+    return (firstlandingpoint, lastcountry)
 
 
 
 def loadConnections(catalog):
 
     connectionsFile = os.path.join('Data','connections.csv')
-    input_file = csv.DictReader(open(connectionsFile, encoding="utf-8"),
-                                delimiter=",")
+    input_file = csv.DictReader(open(connectionsFile, encoding="utf-8"), delimiter=",")
 
     for connection in input_file:
         model.addConnection(catalog, connection)
@@ -59,22 +59,32 @@ def loadConnections(catalog):
 def loadCountries(catalog):
 
     countriesfile = os.path.join('Data','countries.csv')
-    input_file = csv.DictReader(open(countriesfile, encoding="utf-8"),
-                                delimiter=",")
+    input_file = csv.DictReader(open(countriesfile, encoding="utf-8"), delimiter=",")
+
+    lastcountry = None
 
     for country in input_file:
-        model.addCountries(catalog, country)
+        lastcountry = country
+        model.addCountry(catalog, country)
+
+    return lastcountry
 
 
 
 def loadLandingPoints(catalog):
 
     landing_points_file = os.path.join('Data','landing_points.csv')
-    input_file = csv.DictReader(open(landing_points_file, encoding="utf-8"),
-                                delimiter=",")
-    for landpoi in input_file:
-        model.addLandingPoints(catalog, landpoi)
-        
+    input_file = csv.DictReader(open(landing_points_file, encoding="utf-8"), delimiter=",")
+
+    first_landingpoint = None
+
+    for landingpoint in input_file:
+        if first_landingpoint is None:
+            first_landingpoint = landingpoint
+        model.addLandingPoint(catalog, landingpoint)
+
+    return first_landingpoint
+
 
 
 # Funciones de ordenamiento

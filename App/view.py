@@ -60,13 +60,14 @@ while True:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog = controller.ini()
-        controller.loadData(catalog)
+        info = controller.loadData(catalog)
         numvertex = controller.totalVertex(catalog)
         numedges = controller.totalEdges(catalog)
         countries = mp.size(catalog["Countries"])
         print('Numero de Landing Pointa: ' + str(numvertex))
         print('Numero de conexiones entre Landing points: ' + str(numedges))
         print("Total de paises:", countries)
+        print(info)
 
 
     
