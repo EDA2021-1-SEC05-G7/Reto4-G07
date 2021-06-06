@@ -41,12 +41,11 @@ def printMenu():
     print("*******************************************")
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- Encontrar la cantidad de clusters")
-    print("3- Landing points de interconexion")
-    print("4- Ruta minima entre dos paises")
-    print("5- ")
+    print("2- Identificar los clústeres de comunicación")
+    print("3- Identificar los puntos de conexión críticos de la red")
+    print("4- Ruta de menor distancia entre dos paises")
+    print("5- Identificar la Infraestructura Crítica de la Red")
     print("6- Impacto de fallo en landing point")
-    print("7- ")
     print("0- Salir")
     print("*******************************************")
 
@@ -61,16 +60,17 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
 
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
 
-        catalog, flandingpoint, last_country = controller.initialize()
-        
+        print("Cargando información de los archivos ....")
+        catalog, first_landingpoint, last_country = controller.initialize()
         print("Numero de landing points:", mp.size(catalog["LandingPoints"]))
-        print("Numero de conexiones entre landing points:", gr.numEdges(catalog["Connections"]))
+        print("Numero de conexiones entre landing points:", gr.numEdges(catalog["Graph"]))
         print("Numero de paises:", mp.size(catalog["Countries"]))
-        print("Primer landing point:", "Id:", flandingpoint["id"], "Nombre:", flandingpoint["name"])
-        print("\tLatitude:", flandingpoint["latitude"].strip())
-        print("\tLongitude:", flandingpoint["longitude"].strip())
+        print("Primer landing point:")
+        print("\tId:", first_landingpoint["id"].strip())
+        print("\tNombre:", first_landingpoint["name"].strip())
+        print("\tLatitude:", first_landingpoint["latitude"].strip())
+        print("\tLongitude:", first_landingpoint["longitude"].strip())
         print("Ultimo pais:")
         print("\tNombre:", last_country["CountryName"].strip())
         print("\tPoblacion:", last_country["Population"].strip())
@@ -83,14 +83,16 @@ while True:
 
         clusters, connected = controller.req1(catalog, landingpoint1, landingpoint2)
 
-        print("Numero de clusters:", clusters)
-        print("Mismo cluster:", ("yes" if connected else "no"))
+
+        print("\nNumero de clusters:", clusters)
+        print("Mismo cluster:", ("si" if connected else "no"))
 
 
     elif int(inputs[0]) == 3:
         #Requerimiento2
         ans = controller.req2(catalog)
 
+        print("Lista de Landing points que sirven como puntos de interconexión")
         for key in ans:
             print("Landing point:", ans[key][0])
             print("\tPais:", ans[key][1])
@@ -116,40 +118,31 @@ while True:
 
         while not st.isEmpty(route):
             val = st.pop(route)
-            print("\tId1:", val["vertexA"], "Id2:", val["vertexB"], "Distancia:", val["weight"], "km")
+            print("\nId1:", val["vertexA"], "Id2:", val["vertexB"], "Distancia:", val["weight"], "km")
 
-        print("Distancia Total:", dist)
+        print("Distancia Total:", dist, "km")
 
 
     elif int(inputs[0]) == 5:
         #Requerimiento4
-        #Este requerimiento no se puede completar debido a que la puta implementacion de prim esta mal y no sirve ninguna de las funciones
-        pass
+    
+        print("Este requerimiento no se puede completar debido a que la implementacion de prim no es correcta.")
 
 
     elif int(inputs[0]) == 6:
         #Requerimiento5
         landingpoint = input("Landing point:\n").strip()
+
         ans = controller.req5(catalog, landingpoint)
 
         print("Paises afectados:", pq.size(ans))
+        print("\n Lista de paises afectados:")
 
         while not pq.isEmpty(ans):
             val = pq.delMin(ans)
             print("\tPais:", val[0], "- Distancia:", val[1])
 
-    elif int(inputs[0]) == 7:
-        #Requerimiento6Bono
-        pass
-
-
-    elif int(inputs[0]) == 8:
-        #Requerimiento7Bono
-        pass
-
-    elif int(inputs[0]) == 9:
-        #Requerimiento8Bono
-        pass
+    
 
     else:
         sys.exit(0)

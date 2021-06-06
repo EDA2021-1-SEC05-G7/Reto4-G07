@@ -26,7 +26,7 @@
 
 
 import config as cf
-from DISClib.ADT.graph import gr
+from DISClib.ADT import graph as gr
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.Algorithms.Graphs import scc
@@ -41,175 +41,120 @@ Se define la estructura de un catálogo de videos. El catálogo tendrá dos list
 los mismos.
 """
 
-# Construccion de modelos
-
 def newCatalog():
-    """Inicializa el catálogo, es decir el grafo
-
+    """
+    Create a new catalog with information provided
     """
 
-    catalog = {"LandingPoints": mp.newMap(numelements=14000,
-                                            maptype='CHAINING',
-                                            comparefunction=compareLandingPoints),
-                "Connections": gr.newGraph(datastructure='ADJ_LIST',
-                                            directed=True,
-                                            size=14000,
-                                            comparefunction=compareLandingPoints),
-                "Paths": mp.newMap(numelements=14000,
-                                            maptype='CHAINING',
-                                            comparefunction=compareLandingPoints),
-                "Countries": mp.newMap(numelements=14000,
-                                            maptype='CHAINING',
-                                            comparefunction=compareLandingPoints)}
+    catalog = {
+        "LandingPoints": mp.newMap(numelements=14000, maptype='CHAINING'),
+        "Connections": mp.newMap(numelements=14000, maptype='CHAINING'),
+        "Countries": mp.newMap(numelements=14000, maptype='CHAINING'),
+        "Graph": gr.newGraph(datastructure='ADJ_LIST', directed=True, size=14000),
+        "LandingPointsByName": mp.newMap(numelements=25000, maptype='PROBING')
+    }
 
     return catalog
 
-# Funciones para agregar informacion al catalogo
-
+# Add info to catalog
 def addConnection(catalog, connection):
+    """
+    Add a connection and update graph info
+    """
 
-    origin = int(connection['\ufefforigin'])
-    destination = int(connection['destination'])
-    length = formatLength(connection['cable_length'])
+    origin = int(connection['\ufefforigin'].strip())
+    destination = int(connection['destination'].strip())
+    length = formatLength(connection['cable_length'].strip())
 
-    addNode(catalog, origin)
-    addNode(catalog, destination)
-    addEdge(catalog, origin, destination, length)
-    addPath(catalog, origin, destination, connection)
+    __addNode(catalog, origin)
+    __addNode(catalog, destination)
+    __addEdge(catalog, origin, destination, length)
 
-    return catalog
+    connection_instance = {
+        "origin": origin,
+        "destination": destination,
+        "cable_name": connection["cable_name"].strip(),
+        "cable_id": connection["cable_id"].strip(),
+        "cable_length": length,
+        "cable_rfs": connection["cable_rfs"].strip(),
+        "owners": connection["owners"].strip(),
+        "capacityTBPS": connection["capacityTBPS"].strip()
+    }
 
-
-# Funciones para creacion de datos
-
-def addNode(catalog, landPointId):
-    """revisa si ya hay un vertex en connectios con el Id que entra por parametro, y si no está
-    lo agrega"""
-
-    if not gr.containsVertex(catalog["Connections"], landPointId):
-        gr.insertVertex(catalog["Connections"], landPointId)
-
-    return catalog
-
-
-def addEdge(catalog, origin, destination, length):
-    """revisa si hay un arco entre el origin y el destination y si no lo encuentra lo añade"""
-
-    ofGlory = gr.getEdge(catalog["Connections"], origin, destination)
-
-    if ofGlory is None:
-        gr.addEdge(catalog["Connections"], origin, destination, length)
-
-    return catalog
-
-
-def addPath(catalog, origin, destination, connection):
-
-    path = str(origin)+"-"+str(destination)
-
-    entry = mp.get(catalog["Paths"], path)
-
-    if entry is None:
-        novaEntry = {"origin": origin,
-                     "destination": destination,
-                     "cableName": connection["cable_name"],
-                     "cableId": connection["cable_id"],
-                     "cableLength": connection["cable_length"],
-                     "owners": connection["owners"],
-                     "capacity": float(connection["capacityTBPS"])}
-        mp.put(catalog["Paths"], path, novaEntry)
-
-    return catalog
+    mp.put(catalog["Connections"], str(origin)+"-"+str(destination), connection_instance)
 
 
 def addCountry(catalog, country):
+    """
+    add a new country into the catalog
+    """
 
-    nomen = country["CountryName"]
+    country_instance = {
+        "CountryName": country["CountryName"].strip(),
+        "CapitalName": country["CapitalName"].strip(),
+        "CapitalLatitude": float(country["CapitalLatitude"].strip()),
+        "CapitalLongitude": float(country["CapitalLongitude"].strip()),
+        "CountryCode": country["CountryCode"].strip(),
+        "ContinentName": country["ContinentName"].strip(),
+        "Population": country["Population"].strip(),
+        "InternetUsers": country["Internet users"].strip()
+    }
 
-    initus = mp.get(catalog["Countries"], nomen)
-
-    if initus is None:
-        novusinit = {"name": country["CountryName"],
-                     "capital": country["CapitalName"],
-                     "code": country["CountryCode"],
-                     "latitude": country["CapitalLatitude"],
-                     "longitude": country["CapitalLongitude"],
-                     "continent": country["ContinentName"],
-                     "population": int(country["Population"].replace(".", "")),
-                     "users": int(country["Internet users"].replace(".", ""))}
-
-        mp.put(catalog["Countries"], nomen, initus)
-    return catalog
+    mp.put(catalog["Countries"], country["CountryName"].strip(), country_instance)
 
 
 def addLandingPoint(catalog, landingpoint):
+    """
+    Add a new landing point to catalog
+    """
 
-    lanid = int(landingpoint['landing_point_id'])
+    landingpoint_instance = {
+        "landing_point_id": int(landingpoint["landing_point_id"].strip()),
+        "id": landingpoint["id"].strip(),
+        "name": landingpoint["name"],
+        "latitude": float(landingpoint["latitude"].strip()),
+        "longitude": float(landingpoint["longitude"].strip())
+    }
 
-    inita = mp.get(catalog['LandingPoints'], lanid)
-
-    if inita is None:
-        novuminit = {"Landid": int(landingpoint["landing_point_id"]),
-                     "id": landingpoint['id'],
-                     "name": landingpoint["name"],
-                     "latitude": landingpoint["latitude"],
-                     "longitude": landingpoint["longitude"]}
-
-        mp.put(catalog['LandingPoints'], lanid, novuminit)
-
-    return catalog
-
-
-
+    mp.put(catalog["LandingPoints"], int(landingpoint["landing_point_id"].strip()), landingpoint_instance)
+    mp.put(catalog["LandingPointsByName"], landingpoint["name"].split(',')[0], landingpoint_instance)
+    if landingpoint["name"].split(',')[0] == "Siyazan":
+        print("#####")
 
 # Funciones de consulta
 
-def totalVertex(catalog):
-
-    return gr.numVertices(catalog["Connections"])
-
-
-
-def totalEdges(catalog):
-
-    return gr.numEdges(catalog["Connections"])
-
-
-
 # Funciones utilizadas para comparar elementos dentro de una lista
-
-def compareLandingPoints(stop, keyValue):
-    """Compara enytre dos Landing-Points"""
-
-    key = keyValue["key"]
-
-    if stop == key:
-        return 0
-    elif stop > key:
-        return 1
-    else:
-        return -1
-
-
 
 # Funciones de ordenamiento
 
+
+#utility functions
 def formatLength(length):
-
+    """
+    format the csv length
+    """
     if length == "n.a.":
-        length = 0
-    else:
-        length = length.split(" ")
-        length = float(length[0].replace(",", ""))
+        return 0
 
-    return length
+    length = length.split(" ")
+    return float(length[0].replace(",", ""))
 
 
-def primerlandingpoint(catalog):
-    i = 0
-    for j in me.setKey(catalog["LandingPoints"]):
-        while i < 1:
-            pareja = mp.get(catalog["LandingPoints"], j)
-            value = me.getValue(pareja)
+# graph creation functions
+def __addNode(catalog, landingpoint_id):
+    """
+    Add a node to the graph
+    """
+    if not gr.containsVertex(catalog["Graph"], landingpoint_id):
+        gr.insertVertex(catalog["Graph"], landingpoint_id)
 
-        i += 1
+
+def __addEdge(catalog, origin, destination, length):
+    """
+    Ad an edge between two nodes
+    """
+
+    edge_check = gr.getEdge(catalog["Graph"], origin, destination)
+
+    if edge_check is None:
+        gr.addEdge(catalog["Graph"], origin, destination, length)
