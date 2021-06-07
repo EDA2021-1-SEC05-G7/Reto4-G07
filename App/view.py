@@ -122,13 +122,13 @@ while True:
             val = st.pop(route)
             print("\nId1:", val["vertexA"], "Id2:", val["vertexB"], "Distancia:", val["weight"], "km")
 
-        print("Distancia Total:", dist, "km")
+        print("\nDistancia Total:", dist, "km")
 
 
     elif int(inputs[0]) == 5:
         #Requerimiento4
     
-        print("Este requerimiento no se puede completar debido a que la implementacion de prim no es correcta.")
+        print("Este requerimiento no se puede completar debido a que la implementacion de prim no es correcta.\n")
 
 
     elif int(inputs[0]) == 6:

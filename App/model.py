@@ -120,8 +120,7 @@ def addLandingPoint(catalog, landingpoint):
 
     mp.put(catalog["LandingPoints"], int(landingpoint["landing_point_id"].strip()), landingpoint_instance)
     mp.put(catalog["LandingPointsByName"], landingpoint["name"].split(',')[0], landingpoint_instance)
-    if landingpoint["name"].split(',')[0] == "Siyazan":
-        print("#####")
+    
 
 # Funciones para creacion de datos
 
