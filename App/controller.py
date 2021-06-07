@@ -135,11 +135,9 @@ def req2(catalog):
 
     delta_time = stop_time - start_time
     delta_memory = deltaMemory(start_memory, stop_memory)
-    print("time",delta_time,"memory",delta_memory)
-    return req
+    return (delta_time,delta_memory,req)
 
 def req3(catalog, paisA, paisB):
-    def req2(catalog):
     delta_time = -1.0
     delta_memory = -1.0
 
@@ -160,7 +158,6 @@ def req3(catalog, paisA, paisB):
     return req
 
 def req4(catalog):
-    def req2(catalog):
     delta_time = -1.0
     delta_memory = -1.0
 
@@ -181,7 +178,6 @@ def req4(catalog):
     return req
 
 def req5(catalog, landingpoint):
-    def req2(catalog):
     delta_time = -1.0
     delta_memory = -1.0
 

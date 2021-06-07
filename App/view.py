@@ -90,7 +90,7 @@ while True:
 
     elif int(inputs[0]) == 3:
         #Requerimiento2
-        ans = controller.req2(catalog)
+        (time,memory,ans) = controller.req2(catalog)
 
         print("Lista de Landing points que sirven como puntos de interconexión")
         for key in ans:
@@ -98,6 +98,8 @@ while True:
             print("\tPais:", ans[key][1])
             print("\tId:", ans[key][2])
             print("\tCables connectados:", ans[key][3])
+        
+        print("time",time,"memory",memory)
 
 
     elif int(inputs[0]) == 4:
