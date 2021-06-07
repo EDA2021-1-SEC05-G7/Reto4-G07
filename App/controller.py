@@ -24,6 +24,9 @@ import config as cf
 import model
 import csv
 import os
+import datetime as dt
+import tracemalloc
+import time
 
 from DISClib.Algorithms.Graphs import dijsktra as dj
 from DISClib.Algorithms.Graphs import dfs
@@ -93,21 +96,139 @@ def __loadLandingPoints(catalog):
 # Funciones de consulta sobre el catálogo
 
 def req1(catalog, landingpoint1, landingpoint2):
+    
+    delta_time = -1.0
+    delta_memory = -1.0
 
-    return model.req1(catalog, landingpoint1, landingpoint2)
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    
+    #req
+    req = model.req1(catalog, landingpoint1, landingpoint2)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+    print("time",delta_time,"memory",delta_memory)
+    return req
+
+    
 
 def req2(catalog):
+    delta_time = -1.0
+    delta_memory = -1.0
 
-    return model.req2(catalog)
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    
+    #req
+    req = model.req2(catalog)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+    print("time",delta_time,"memory",delta_memory)
+    return req
 
 def req3(catalog, paisA, paisB):
+    def req2(catalog):
+    delta_time = -1.0
+    delta_memory = -1.0
 
-    return model.req3(catalog, paisA, paisB)
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    
+    #req
+    req = model.req3(catalog, paisA, paisB)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+    print("time",delta_time,"memory",delta_memory)
+    return req
 
 def req4(catalog):
+    def req2(catalog):
+    delta_time = -1.0
+    delta_memory = -1.0
 
-    return model.req4(catalog)
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    
+    #req
+    req = model.req4(catalog)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+    print("time",delta_time,"memory",delta_memory)
+    return req
 
 def req5(catalog, landingpoint):
+    def req2(catalog):
+    delta_time = -1.0
+    delta_memory = -1.0
 
-    return model.req5(catalog, landingpoint)
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    
+    #req
+    req = model.req5(catalog, landingpoint)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+    print("time",delta_time,"memory",delta_memory)
+    return req
+
+
+# funciones para pruebas de rendimiento
+
+def getTime():
+    """
+    devuelve el instante tiempo de procesamiento en milisegundos
+    """
+    return float(time.perf_counter()*1000)
+
+
+def getMemory():
+    """
+    toma una muestra de la memoria alocada en instante de tiempo
+    """
+    return tracemalloc.take_snapshot()
+
+
+def deltaMemory(start_memory, stop_memory):
+    """
+    calcula la diferencia en memoria alocada del programa entre dos
+    instantes de tiempo y devuelve el resultado en bytes (ej.: 2100.0 B)
+    """
+    memory_diff = stop_memory.compare_to(start_memory, "filename")
+    delta_memory = 0.0
+
+    # suma de las diferencias en uso de memoria
+    for stat in memory_diff:
+        delta_memory = delta_memory + stat.size_diff
+    # de Byte -> kByte
+    delta_memory = delta_memory/1024.0
+    return delta_memory
