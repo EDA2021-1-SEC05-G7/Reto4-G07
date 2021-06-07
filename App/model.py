@@ -148,24 +148,34 @@ def __addEdge(catalog, origin, destination, length):
 
 #Requerimiento1
 def req1(catalog, landingpoint1, landingpoint2):
+
+    #Se obtiene el Id de los dos landing points
     landingpoint1 = mp.get(catalog["LandingPointsByName"], landingpoint1)["value"]["landing_point_id"]
     landingpoint2 = mp.get(catalog["LandingPointsByName"], landingpoint2)["value"]["landing_point_id"]
 
     cnt = 0
+
+    #Revisa si ya se pasa por un nodo
     checked = mp.newMap(numelements=14000, maptype='CHAINING')
 
+    #Iterador manual
     stupid = mp.keySet(catalog["LandingPoints"])["first"]
+    
     while stupid:
         key = stupid["info"]
         stupid = stupid["next"]
 
+        #Revisa si la llave está en el map
         if mp.contains(checked, key):
             continue
         mp.put(checked, key, True)
         cnt += 1
         dfs_struct = dfs.DepthFirstSearch(catalog["Graph"], key)
 
+        #segundo iterador manual
+
         stupid2 = mp.keySet(catalog["LandingPoints"])["first"]
+        
         while stupid2:
             key2 = stupid2["info"]
             stupid2 = stupid2["next"]
@@ -185,7 +195,9 @@ def req1(catalog, landingpoint1, landingpoint2):
 def req2(catalog):
     ans = {}
 
+    #Iterador manual
     stupid = mp.keySet(catalog["LandingPoints"])["first"]
+
     while stupid:
         key = stupid["info"]
         stupid = stupid["next"]
@@ -216,9 +228,10 @@ def req3(catalog, paisA, paisB):
     if mp.contains(catalog["LandingPointsByName"], comboA):
         dirA = mp.get(catalog["LandingPointsByName"], comboA)["value"]["landing_point_id"]
 
-    if mp.contains(catalog["LandingPointsByName"], comboA):
-        dirA = mp.get(catalog["LandingPointsByName"], comboA)["value"]["landing_point_id"]
+    if mp.contains(catalog["LandingPointsByName"], comboB):
+        dirB = mp.get(catalog["LandingPointsByName"], comboB)["value"]["landing_point_id"]
 
+    
     if dirA is None:
         stupid = mp.keySet(catalog["LandingPointsByName"])["first"]
         while stupid:
@@ -264,8 +277,7 @@ def req4(catalog):
 
     return None
 
-    #Este requerimiento no se puede completar debido a que la implementacion de prim esta mal y no sirve ninguna de las funciones
-
+   
 
 #Requerimiento5
 def req5(catalog, landingpoint):
@@ -295,6 +307,7 @@ def req5(catalog, landingpoint):
                 continue
         mp.put(countries, country, edge)
 
+    #iterador manual
     stupid = mp.keySet(countries)["first"]
     min_pq = pq.newMinPQ(cmp_req5)
     while stupid:
