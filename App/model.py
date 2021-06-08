@@ -154,7 +154,7 @@ def req1(catalog, landingpoint1, landingpoint2):
 
     cnt = 0
 
-    #Revisa si ya se pasa por un nodo
+    #Revisa si un nodo ya está en un cluster
     checked = mp.newMap(numelements=14000, maptype='CHAINING')
 
     #Iterador manual
@@ -215,9 +215,12 @@ def req2(catalog):
 
 #Requerimiento3
 def req3(catalog, paisA, paisB):
+    
+    #Info de cada pais
     paisA = mp.get(catalog["Countries"], paisA)["value"]
     paisB = mp.get(catalog["Countries"], paisB)["value"]
 
+    #se obtiene la capital y el pais
     comboA = paisA["CapitalName"]+", " + paisA["CountryName"]
     comboB = paisB["CapitalName"]+", " + paisB["CountryName"]
 
@@ -280,24 +283,28 @@ def req4(catalog):
 
 #Requerimiento5
 def req5(catalog, landingpoint):
+    # estraer el ID del landing point
     landingpoint = mp.get(catalog["LandingPointsByName"], landingpoint)["value"]["landing_point_id"]
 
     graph = catalog["Graph"]
     rev_graph = __reverseGraph(graph)
 
+    # listas de adyacencia de landing point consultado
     lst_adj = gr.adjacents(graph, landingpoint)
     lst_adj_rev = gr.adjacents(rev_graph, landingpoint)
 
     countries = mp.newMap(numelements=14000, maptype='CHAINING')
 
+    # iterar en los adyacentes del landingpoint 
     for adj in lt.iterator(lst_adj):
         edge = gr.getEdge(graph, landingpoint, adj)['weight']
         country = mp.get(catalog["LandingPoints"], adj)["value"]["name"].split(",")[-1]
+        # saber si ya se ha guardado el pais y saber si es menor o igual al edge para no agregarlo y salir de esta iteracion
         if mp.contains(countries, country):
             if mp.get(countries, country)["value"] <= edge:
                 continue
         mp.put(countries, country, edge)
-
+    # lo mismo pero en el grafo al revés     
     for adj_rev in lt.iterator(lst_adj_rev):
         edge = gr.getEdge(rev_graph, adj, landingpoint)['weight']
         country = mp.get(catalog["LandingPoints"], adj_rev)["value"]["name"].split(",")[-1]
